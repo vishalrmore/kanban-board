@@ -1,25 +1,30 @@
-import logo from './logo.svg';
-import './App.css';
+import React from "react";
+import { Redirect, Route, Switch } from "react-router-dom";
+import Blank from "./components/layouts/blank/Blank";
+import Full from "./components/layouts/full/Full";
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+const isAuth = sessionStorage.getItem("loggedUser");
+const ProtectedRoute = ({ children, ...props }) => {
+  return isAuth ? (
+    <Route {...props}>{children}</Route>
+  ) : (
+    <Redirect to="/signin" />
   );
-}
+};
+
+const App = () => {
+  return (
+    <>
+      <Switch>
+        <ProtectedRoute path="/secured" >
+          <Full />
+        </ProtectedRoute>
+        <Route path="/">
+          <Blank />
+        </Route>
+      </Switch>
+    </>
+  );
+};
 
 export default App;
